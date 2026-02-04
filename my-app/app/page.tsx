@@ -52,6 +52,25 @@ export default function Page() {
     closeMenu();
     scrollToId(id);
   }
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const formData = new FormData(form);
+
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    alert("Klaida siunčiant formą");
+    return;
+  }
+
+  alert("Žinutė išsiųsta!");
+  form.reset();
+}
 
   return (
     <main>
@@ -474,15 +493,45 @@ export default function Page() {
             </p>
           </header>
 
-          <form className="form" method="post" action="#">
-            <label><span>Vardai</span><input type="text" placeholder="Jūsų vardai" required /></label>
-            <label><span>El. paštas</span><input type="email" placeholder="jusu@email.lt" required /></label>
-            <label><span>Vestuvių data</span><input type="date" required /></label>
-            <label><span>Šventės vieta</span><input type="text" placeholder="Miestas / vieta" required /></label>
-            <label className="full"><span>Žinutė (nebūtina)</span><textarea rows={5} placeholder="Trumpai papasakokite apie savo dieną – mums tai labai padeda 😊" /></label>
-            <button className="btn btnPrimary btnFull" type="submit">Siųsti užklausą</button>
-            <p className="smallMuted">Atvykimas visoje Lietuvoje įskaičiuotas į visus paketus.</p>
-          </form>
+         <form className="form" onSubmit={handleSubmit}>
+  <label>
+    <span>Vardai</span>
+    <input name="name" type="text" placeholder="Jūsų vardai" required />
+  </label>
+
+  <label>
+    <span>El. paštas</span>
+    <input name="email" type="email" placeholder="jusu@email.lt" required />
+  </label>
+
+  <label>
+    <span>Šventės data</span>
+    <input name="date" type="date" required />
+  </label>
+
+  <label>
+    <span>Šventės vieta</span>
+    <input name="location" type="text" placeholder="Miestas / vieta" required />
+  </label>
+
+  <label className="full">
+    <span>Žinutė</span>
+    <textarea
+  name="message"
+  rows={5}
+  placeholder="Trumpai papasakokite apie savo dieną"
+  required
+></textarea>
+
+  </label>
+
+  <button className="btn btnPrimary btnFull" type="submit">
+    Siųsti užklausą
+  </button>
+
+  <p className="smallMuted">Atvykimas visoje Lietuvoje įskaičiuotas į visus paketus.</p>
+</form>
+
         </div>
       </section>
 
